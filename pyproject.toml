@@ -9,6 +9,11 @@ python = ">=3.11.0,<3.12"
 gradio = "^4.31.5"
 anthropic = "^0.29.0"
 ratelimit = "^2.2.1"
+requests = "^2.32.3"
+flask = "^3.0.3"
+flask-cors = "^4.0.1"
+python-dotenv = "^1.0.1"
+flask-session = "^0.8.0"
 
 [tool.poetry.dev-dependencies]
 debugpy = "^1.6.2"

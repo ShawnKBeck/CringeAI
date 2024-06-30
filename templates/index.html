@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Cringe AI - Bussin Skibidi Rizz Vibes! 🚀</title>
+    <link rel="icon" href="{{url_for('static', filename='cringe_ai_icon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff00ff, #00ffff);
+            font-family: 'Press Start 2P', cursive;
+            color: #ff0000;
+            text-shadow: 2px 2px #ffff00;
+            cursor: url('https://cur.cursors-4u.net/nature/nat-10/nat908.cur'), auto;
+        }
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3em;
+            text-align: center;
+            animation: rainbow 5s infinite;
+            letter-spacing: 2px;
+        }
+        @keyframes rainbow {
+            0% {color: red;} 14% {color: orange;} 28% {color: yellow;}
+            42% {color: green;} 57% {color: blue;} 71% {color: indigo;}
+            85% {color: violet;} 100% {color: red;}
+        }
+        .chat-container {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 5px dashed #00ff00;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 0 20px #ff00ff;
+        }
+        #chat-messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 3px dotted #0000ff;
+            padding: 10px;
+            background-image: url('https://media.giphy.com/media/3o7aCTfyhYawdOXcFW/giphy.gif');
+            background-size: cover;
+            transition: background-image 0.5s;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+        .message { margin-bottom: 10px; padding: 5px; border-radius: 10px; }
+        .user-message { background-color: #ffff00; color: #000000; text-align: right; margin-left: 20%; }
+        .assistant-message { background-color: #00ffff; color: #ff00ff; text-align: left; margin-right: 20%; }
+        #user-input {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border: 3px solid #ff00ff;
+            border-radius: 10px;
+            font-size: 1em;
+            background-color: #ffff00;
+            color: #0000ff;
+            font-family: 'Press Start 2P', cursive;
+        }
+        button {
+            background-color: #00ff00;
+            color: #ff0000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-family: 'Press Start 2P', cursive;
+        }
+        button:hover { transform: rotate(360deg) scale(1.2); }
+        .marquee {
+            width: 100%;
+            overflow: hidden;
+            background: #000000;
+            color: #ffffff;
+            font-size: 0.8em;
+        }
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div id="marquee" class="marquee">
+        <div class="marquee-content">
+            🔥🔥🔥 Welcome to the coolest chat experience since AOL Instant Messenger! 🔥🔥🔥
+        </div>
+    </div>
+
+    <h1 id="title" class="blink">🤖 Cringe AI Chat 💬</h1>
+
+    <div class="chat-container">
+        <div id="chat-messages">
+            <div class="message assistant-message">{{ intro_message | safe }}</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your rad message here, homie! 😎">
+            <button onclick="sendMessage()">Send It! 🚀</button>
+        </div>
+    </div>
+
+    <script>
+        let chatHistory = [['', `{{ intro_message | safe }}`]];
+        let isFirstMessage = true;
+
+        function stopChatBackgroundAnimation() {
+            $('#chat-messages').css('background-image', 'none');
+        }
+
+        function sendMessage() {
+            const userInput = $('#user-input').val().trim();
+            if (userInput === '') return;
+
+            $('#chat-messages').append(`<div class="message user-message">${escapeHtml(userInput)}</div>`);
+            $('#user-input').val('');
+
+            if (isFirstMessage) {
+                stopChatBackgroundAnimation();
+                isFirstMessage = false;
+            }
+
+            $.ajax({
+                url: '/chat',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({message: userInput, history: chatHistory}),
+                success: function(response) {
+                    if (response.response) {
+                        const formattedResponse = formatResponse(response.response);
+                        $('#chat-messages').append(`<div class="message assistant-message">${formattedResponse}</div>`);
+                        chatHistory.push([userInput, response.response]);
+                    }
+                    $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+                }
+            });
+        }
+
+        $('#user-input').keypress(function(e) {
+            if (e.which == 13) {
+                sendMessage();
+                return false;
+            }
+        });
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function formatResponse(response) {
+            return escapeHtml(response).replace(/\n/g, '<br>');
+        }
+    </script>
+</body>
+</html>
